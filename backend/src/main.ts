@@ -1,16 +1,19 @@
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
-import { ConfigService } from "@nestjs/config";
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 
 async function start() {
+  const PORT = process.env.PORT || 3000;
   const app = await NestFactory.create(AppModule);
-  const config = app.get(ConfigService);
-  const PORT = config.get<number>("PORT") || 3000;
-  await app.listen(PORT, () => console.log(`Server started on port = ${PORT}`));
 
-  console.log(`🚀 Server is running on http://localhost:${PORT}`);
-  console.log(
-    `✅ Connected to DB: ${config.get("DB_NAME")} at ${config.get("DB_HOST")}:${config.get("DB_PORT")}`
-  );
+  const config = new DocumentBuilder()
+    .setTitle("NODUS API")
+    .setDescription("Документация REST API")
+    .setVersion("1.0.0")
+    .addTag("nighteezy", "ChillkaBase")
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup("/api/docs", app, document);
+  await app.listen(PORT, () => console.log(`Server started on port = ${PORT}`));
 }
 start();
