@@ -13,7 +13,7 @@ model User {
   email String @unique
   password String
   name String
-  role Role @default(USER)
+  roles      UserRole[] 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   projects Project[]
@@ -21,6 +21,24 @@ model User {
   messages Message[]
   chats Chat[] @relation("UserChats")
 }
+
+model Role {
+  id    String     @id @default(uuid())
+  name  String     @unique
+  users UserRole[]
+}
+
+model UserRole {
+  userId String
+  roleId String
+
+  user   User @relation(fields: [userId], references: [id])
+  role   Role @relation(fields: [roleId], references: [id])
+
+  @@id([userId, roleId]) // составной ключ для связи многие ко многим
+}
+
+
 
 model Project {
   id String @id @default(uuid())
@@ -73,12 +91,6 @@ model Message {
 
   chat      Chat     @relation(fields: [chatId], references: [id])
   chatId    String
-}
-
-enum Role {
-  ADMIN
-  EDITOR
-  USER
 }
 
 enum TaskStatus {
