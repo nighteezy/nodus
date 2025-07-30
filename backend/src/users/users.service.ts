@@ -12,7 +12,7 @@ export class UsersService {
 
   async createUser(dto: CreateUserDto) {
     const user = await this.prisma.user.create({ data: dto });
-    const role = await this.rolesService.getRoleByValue("USER");
+    const role = await this.rolesService.getRoleByValue("ADMIN");
     if (!role) throw new Error("Role USER not found");
     await this.prisma.userRole.create({
       data: {
