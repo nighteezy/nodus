@@ -7,13 +7,7 @@ export class PrismaService
   implements OnModuleInit, OnModuleDestroy
 {
   constructor(private config: ConfigService) {
-    super({
-      datasources: {
-        db: {
-          url: `postgresql://${config.get("DB_USER")}:${config.get("DB_PASSWORD")}@${config.get("DB_HOST")}:${config.get("DB_PORT")}/${config.get("DB_NAME")}?schema=${config.get("DB_SCHEMA")}`,
-        },
-      },
-    });
+    super();
   }
 
   async onModuleInit() {
